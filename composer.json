@@ -1,0 +1,24 @@
+{
+  "name": "laocc/gd",
+  "description": "gds",
+  "homepage": "https://github.com/laocc/gd",
+  "authors": [
+    {
+      "name": "fazo",
+      "email": "fazo@qq.com"
+    }
+  ],
+  "require": {
+    "php": ">7.0",
+    "ext-json": "*",
+    "ext-gd": "*",
+    "ext-exif": "*",
+    "ext-mbstring": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "esp\\gd\\": "src/",
+      "esp\\gd\\gd\\": "gd/"
+    }
+  }
+}
