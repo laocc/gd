@@ -11,13 +11,11 @@
   "require": {
     "php": ">7.0",
     "ext-json": "*",
-    "ext-gd": "*",
-    "ext-mbstring": "*"
+    "ext-gd": "*"
   },
   "autoload": {
     "psr-4": {
-      "esp\\gd\\": "src/",
-      "esp\\gd\\gd\\": "gd/"
+      "esp\\gd\\": "src/"
     }
   }
 }
