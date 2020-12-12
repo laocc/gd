@@ -40,10 +40,10 @@ class Thumbnail extends BaseGD
         $val['height'] = substr("000{$height}", -3);
         $val['mode'] = $mode;
         $val['ext'] = $info['extension'] ?? 'png';
-        $val['rand'] = $rand ?: '';
+        $val['rand'] = $rand ?: date('Y');
 
         $src = $conf['src'] ?? '';
-        if (!$src) $src = '{img}_{width}{mode}{height}.{ext}?#{rand}';
+        if (!$src) $src = '{img}_{width}{mode}{height}.{ext}?_r={rand}';
 
         return replace_array($src, $val);
     }
