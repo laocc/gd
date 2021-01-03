@@ -1,5 +1,4 @@
 <?php
-
 namespace esp\gd\gd;
 
 use esp\core\ext\EspError;
