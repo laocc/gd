@@ -21,7 +21,9 @@ class Thumbnail extends BaseGD
     public static function src(array $conf, string $img, $size = 2, string $rand = null, string $mode = 'x')
     {
         if (!$img) return '';
+        if ($size === 0) return $img;
         $info = pathinfo($img);
+
         if (is_int($size)) {
             $width = $size;
             if ($width < 10) $width = $conf['size'][$width] ?? 60;
@@ -147,9 +149,9 @@ class Thumbnail extends BaseGD
 
         //若宽高任一值为0,则进行等比缩小
         if ($option['height'] === 0) {
-            $option['height'] = $option['width'] * ($PicV['oldHeight'] / $PicV['oldWidth']);
+            $option['height'] = intval($option['width'] * ($PicV['oldHeight'] / $PicV['oldWidth']));
         } else if ($option['width'] === 0) {
-            $option['width'] = $option['height'] * ($PicV['oldWidth'] / $PicV['oldHeight']);
+            $option['width'] = intval($option['height'] * ($PicV['oldWidth'] / $PicV['oldHeight']));
         }
 
         //建目标模式
