@@ -11,7 +11,12 @@
   "require": {
     "php": ">7.0",
     "ext-json": "*",
-    "ext-gd": "*"
+    "ext-gd": "*",
+    "ext-pdo": "*",
+    "ext-xml": "*",
+    "ext-simplexml": "*",
+    "ext-libxml": "*",
+    "ext-curl": "*"
   },
   "autoload": {
     "psr-4": {

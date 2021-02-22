@@ -83,7 +83,7 @@ class BaseGD
     public function draw($im, &$type, string $fileName = null)
     {
         if (is_string($type)) {
-            $type = ['git' => IMAGETYPE_GIF,
+            $type = ['gif' => IMAGETYPE_GIF,
                     'jpg' => IMAGETYPE_JPEG,
                     'jpeg' => IMAGETYPE_JPEG,
                     'png' => IMAGETYPE_PNG][$type] ?? IMAGETYPE_PNG;
