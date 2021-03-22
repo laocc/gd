@@ -79,13 +79,13 @@ class Thumbnail extends BaseGD
             $option['height'] = intval($matches['height'] ?? 32);
 
             if (!$option['source']) {
-                echo "{$this->root}/{$option['img']} .file not exists";
+                echo "source [ ROOT/{$matches['img']} ] file not exists";
                 return false;
             }
 
             //源文件不存在
             if (!is_file($option['source'])) {
-                echo "{$option['source']} .file not exists";
+                echo "source [ ROOT/{$matches['img']} ] file not exists";
                 return false;
             }
 
