@@ -86,6 +86,8 @@ class QrCode extends BaseGD
         $option['width'] = is_int($option['width']) ? $option['width'] : 400;
         $option['size'] = is_int($option['size']) ? (($option['size'] < 1 or $option['size'] > 20) ? 10 : $option['size']) : 10;
         $option['margin'] = is_int($option['margin']) ? (($option['margin'] < 0 or $option['margin'] > 20) ? 1 : $option['margin']) : 1;
+
+        if (is_array($option['text'])) $option['text'] = json_encode($option['text'], 256 | 64);
         if (strlen($option['text']) < 1) $option['text'] = 'null';
         if (strlen($option['text']) > 500) $option['text'] = substr($option['text'], 0, 500);
 
