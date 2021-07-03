@@ -103,15 +103,16 @@ class QrCode extends BaseGD
         $im = $ec->create($option);
 
         $option = [
-            'save' => $option['save'],//0：只显示，1：只保存，2：即显示也保存，3：返回GD数据流
+            'save' => $option['save'],//0只显示，1：显示，2：保存，3即显示也保存，4：返回GD数据流
             'filename' => $file['filename'] ?? null,
             'type' => IMAGETYPE_PNG,//文件类型
         ];
 
+        $this->display = $option['save'];
         $type = IMAGETYPE_PNG;
         $gd = $this->draw($im, $type, $option['filename']);
-        if ($option['save'] === 3) return $gd;
-        if ($option['save'] !== 1) exit;
+        if ($option['save'] & 4) return $gd;
+        if ($option['save'] & 1) exit;
         return $file;
     }
 
