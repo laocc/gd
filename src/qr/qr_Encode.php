@@ -22,7 +22,7 @@ class qr_Encode
         $QR_PNG_MAXIMUM_SIZE = 1024;//最大宽度
         $maxSize = (int)($QR_PNG_MAXIMUM_SIZE / (count($array) + 2 * $option['margin']));
         $pixelPerPoint = min(max(1, $option['size']), $maxSize);
-        return (new qr_Image)->image($array, $pixelPerPoint, $option);
+        return (new qr_Image([]))->image($array, $pixelPerPoint, $option);
     }
 
 

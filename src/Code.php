@@ -137,7 +137,7 @@ final class Code extends BaseGD
             }
 
         }
-        return $this->draw($img, []);
+        return $this->draw($img);
     }
 
     /**

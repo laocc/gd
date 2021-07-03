@@ -27,7 +27,7 @@ class BaseGD
      * BaseGD constructor.
      * @param array $conf
      */
-    public function __construct(array $conf)
+    public function __construct(array $conf = [])
     {
         if (isset($conf['quality'])) $this->quality = intval($conf['quality']);
         if (isset($conf['icon'])) $this->markIcon = realpath($conf['icon']);
@@ -80,7 +80,7 @@ class BaseGD
      * @param string|null $fileName
      * @return bool|string
      */
-    public function draw($im, &$type, string $fileName = null)
+    public function draw($im, $type = null, string $fileName = null)
     {
         if (is_string($type)) {
             $type = ['gif' => IMAGETYPE_GIF,
@@ -88,6 +88,7 @@ class BaseGD
                     'jpeg' => IMAGETYPE_JPEG,
                     'png' => IMAGETYPE_PNG][$type] ?? IMAGETYPE_PNG;
         }
+        if ($this->display === 0) $this->display = 1;
 
         //保存到文件
         if ($this->display & 2) {
@@ -102,7 +103,8 @@ class BaseGD
                     imagepng($im, $fileName);
                     break;
                 default:
-                    imagegd2($im, $fileName);
+                    imagejpeg($im, $fileName, $this->quality);
+//                    imagegd2($im, $fileName);
             }
         }
 
@@ -133,7 +135,8 @@ class BaseGD
                     imagepng($im);
                     break;
                 default:
-                    imagegd2($im);
+                    imagejpeg($im, $fileName, $this->quality);
+//                    imagegd2($im);
             }
         }
 
