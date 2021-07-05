@@ -8,7 +8,7 @@
 $conf = [];
 
 //host
-$conf['host'] = 'http://pic.521wxs.cn';
+$conf['host'] = 'http://pic.domain.cn';
 
 //文件保存位置
 $conf['root'] = _ROOT . '/upload';
