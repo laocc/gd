@@ -13,7 +13,7 @@ class Text extends BaseGD
      * @param array $option
      * @return array|false|resource|null
      */
-    public function create(array $text, array $option = [])
+    public function create(array $text, array &$option = [])
     {
         $option += [
             'width' => 0,
@@ -33,7 +33,7 @@ class Text extends BaseGD
             'color' => '#000000',
             'angle' => 0,//每个字的角度
             'vertical' => false,//竖向
-            'block' => false,//整快输出
+            'block' => true,//整快输出
             'percent' => 1,//字体间距与字号比例
         ];
 
@@ -47,7 +47,6 @@ class Text extends BaseGD
             imagealphablending($im, true);
             imagesavealpha($im, true);//设置保存PNG时保留透明通道信息
         }
-
 
         $fntPath = dirname(__FILE__, 2);
 

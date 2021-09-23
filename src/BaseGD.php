@@ -35,6 +35,7 @@ class BaseGD
         if (isset($conf['icon'])) $this->markIcon = realpath($conf['icon']);
         if (isset($conf['tclip']) and function_exists('tclip')) $this->tclip = true;
         if (isset($conf['display'])) $this->display = intval($conf['display']);
+        else if (isset($conf['save'])) $this->display = intval($conf['save']);
         if (isset($conf['disc'])) $this->cn_disc = ($conf['disc']);
         if (isset($conf['debug'])) $this->debug = boolval($conf['debug']);
         if (isset($conf['ratio'])) $this->ratio = floatval($conf['ratio']);
@@ -217,8 +218,7 @@ class BaseGD
             case IMAGETYPE_XBM:
                 $PM = @imagecreatefromxbm($pic);
                 break;
-            case IMAGETYPE_ICO:
-                //ICON
+            case IMAGETYPE_ICO:  //ICON
                 $PM = null;
                 break;
             default:
