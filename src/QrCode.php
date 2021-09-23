@@ -107,6 +107,7 @@ class QrCode extends BaseGD
             'filename' => $file['filename'] ?? null,
             'type' => IMAGETYPE_PNG,//文件类型
         ];
+        if ($option['save'] & 8) return $im;
 
         $this->display = $option['save'];
         $type = IMAGETYPE_PNG;

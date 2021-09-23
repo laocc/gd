@@ -16,6 +16,8 @@ class BaseGD
     protected $ratio = 1;//宽和高的比例
     protected $cache = true;//输出图像时缓存到浏览器
     protected $header = 'EspGD Library';
+    protected $width = 0;
+    protected $height = 0;
 
     /**
      * $display: 位和值
@@ -37,6 +39,8 @@ class BaseGD
         if (isset($conf['debug'])) $this->debug = boolval($conf['debug']);
         if (isset($conf['ratio'])) $this->ratio = floatval($conf['ratio']);
         if (isset($conf['header'])) $this->header = strval($conf['header']);
+        if (isset($conf['width'])) $this->width = intval($conf['width']);
+        if (isset($conf['height'])) $this->height = intval($conf['height']);
 
         if (php_sapi_name() === 'cli' and $this->display & 1) {
             throw new \Exception("cli模式中不能显示GD");
