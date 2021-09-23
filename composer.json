@@ -18,7 +18,6 @@
     "ext-libxml": "*",
     "ext-curl": "*",
     "ext-openssl": "*",
-    "ext-fileinfo": "*",
     "ext-mbstring": "*",
     "ext-zlib": "*"
   },
