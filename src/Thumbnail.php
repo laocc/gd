@@ -250,8 +250,7 @@ class Thumbnail extends BaseGD
             return print_r($option, true);
         }
 
-        $type = 'png';
-        $this->draw($newIM, $type, $file);
+        $this->draw($newIM, IMAGETYPE_PNG, $file);
         imagedestroy($oldIM);
         return '';
     }

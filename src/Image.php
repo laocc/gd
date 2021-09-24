@@ -71,7 +71,7 @@ class Image extends BaseGD
         }
         if ($option['save'] & 8) return $base_im;
 
-        $gdImage = $this->draw($base_im, $option);
+        $gdImage = $this->draw($base_im, IMAGETYPE_PNG, $option['filename']);
         if ($option['save'] & 4) return $gdImage;
 
         return $file;

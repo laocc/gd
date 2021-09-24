@@ -110,8 +110,7 @@ class QrCode extends BaseGD
         if ($option['save'] & 8) return $im;
 
         $this->display = $option['save'];
-        $type = IMAGETYPE_PNG;
-        $gd = $this->draw($im, $type, $option['filename']);
+        $gd = $this->draw($im, IMAGETYPE_PNG, $option['filename']);
         if ($option['save'] & 4) return $gd;
         if ($option['save'] & 1) exit;
         return $file;
