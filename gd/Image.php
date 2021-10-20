@@ -2,7 +2,7 @@
 
 namespace esp\gd\gd;
 
-use esp\library\gd\ext\Gd;
+use esp\helper\library\gd\ext\Gd;
 
 /**
  * 图片处理类：

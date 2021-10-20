@@ -3,7 +3,7 @@
 namespace esp\gd;
 
 use esp\gd\qr\qr_Encode;
-use esp\library\gd\ext\Gd;
+use esp\helper\library\gd\ext\Gd;
 
 /**
  *

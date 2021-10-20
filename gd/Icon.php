@@ -3,7 +3,7 @@
 namespace esp\gd\gd;
 
 use esp\error\EspError;
-use esp\library\gd\ext\Gd;
+use esp\helper\library\gd\ext\Gd;
 
 /**
  * 普通图片转换ico。
