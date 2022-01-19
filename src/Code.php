@@ -82,6 +82,7 @@ final class Code extends BaseGD
             'date' => 'YmdH',   //附加时间标识用于date()函数，同时也是有效期
         ],
         'type' => 1,//式样1
+        'session' => true
     ];
 
     //中英文验证码字库，不要含有容易混淆的字符，如0和o。
@@ -122,6 +123,7 @@ final class Code extends BaseGD
             $addContent = strtoupper($opt['attach'] . implode($code));//附加串，有效期最长1小时
             $enCode = password_hash($addContent, PASSWORD_DEFAULT);
             //输出之前先保存Cookies
+            $_SESSION[strtolower($opt['key'] . $option['source'])] = $enCode;
 
             if (version_compare(PHP_VERSION, '7.3', '>')) {
                 $cok = [];
@@ -153,8 +155,13 @@ final class Code extends BaseGD
         $ck = $option['cookies'];
         $ck['attach'] .= date($ck['date']);
         $key = strtolower("{$ck['key']}{$option['source']}");
-        if (!$cookies = $_COOKIE[$key] ?? null) return false;
+        if (!$cookies = ($_COOKIE[$key] ?? null)) return false;
+        if (!$session = ($_SESSION[$key] ?? null)) return false;
+        if ($session !== $cookies) return null;
+
         $addContent = strtoupper("{$ck['attach']}{$input}");
+        $_SESSION[$key] = null;
+
         if (version_compare(PHP_VERSION, '7.3', '>')) {
             $cok = [];
             $cok['domain'] = _DOMAIN;
@@ -167,14 +174,14 @@ final class Code extends BaseGD
         } else {
             setcookie($key, null, -1, '/', _DOMAIN, _HTTPS, true);
         }
-        return password_verify($addContent, $cookies);
+        return password_verify($addContent, $session);
     }
 
 
     /**
      * @param $img
      * @param $code
-     * @param $opt
+     * @param array $opt
      */
     private function createCode1(&$img, &$code, array $opt)
     {
