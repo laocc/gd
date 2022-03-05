@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace esp\gd;
 
+use esp\helper\library\Error;
+use function esp\helper\mk_dir;
 use function esp\helper\replace_array;
 
 class Thumbnail extends BaseGD
@@ -56,6 +58,7 @@ class Thumbnail extends BaseGD
      * @param array $conf
      * @param string $uri
      * @return bool
+     * @throws Error
      */
     public function create(array $conf, string $uri): bool
     {
@@ -107,7 +110,7 @@ class Thumbnail extends BaseGD
             }
 
             $saveFile = $this->root . $uri;
-            if (!is_readable(($fp = dirname($saveFile)))) mkdir($fp, 0740, true);
+            mk_dir($saveFile);
 
             if ($this->tclip and $option['model'] === 'x') {
                 $create = $this->thumbs_tclip($saveFile, $option);
