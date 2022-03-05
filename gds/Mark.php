@@ -1,6 +1,6 @@
 <?php
 
-namespace github\thumbnail\gd;
+namespace laocc\thumbnail\gd;
 
 
 class Mark
