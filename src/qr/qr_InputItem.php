@@ -3,7 +3,6 @@
 
 namespace esp\gd\qr;
 
-use esp\error\EspError;
 
 class qr_InputItem
 {
@@ -22,7 +21,7 @@ class qr_InputItem
         }
 
         if (!qr_Input::check($mode, $size, $setData)) {
-            throw new EspError('Error m:' . $mode . ',s:' . $size . ',d:' . join(',', $setData));
+            throw new \Error('Error m:' . $mode . ',s:' . $size . ',d:' . join(',', $setData));
         }
 
         $this->mode = $mode;
@@ -61,7 +60,7 @@ class qr_InputItem
             $this->bstream = $bs;
             return 0;
 
-        } catch (EspError $e) {
+        } catch (\Error $e) {
             return -1;
         }
     }
@@ -91,7 +90,7 @@ class qr_InputItem
             $this->bstream = $bs;
             return 0;
 
-        } catch (EspError $e) {
+        } catch (\Error $e) {
             return -1;
         }
     }
@@ -112,7 +111,7 @@ class qr_InputItem
             $this->bstream = $bs;
             return 0;
 
-        } catch (EspError $e) {
+        } catch (\Error $e) {
             return -1;
         }
     }
@@ -131,7 +130,7 @@ class qr_InputItem
             $this->bstream = $bs;
             return 0;
 
-        } catch (EspError $e) {
+        } catch (\Error $e) {
             return -1;
         }
     }
@@ -219,7 +218,7 @@ class qr_InputItem
 
             return $this->bstream->size();
 
-        } catch (EspError $e) {
+        } catch (\Error $e) {
             return -1;
         }
     }

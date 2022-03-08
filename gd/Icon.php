@@ -2,7 +2,6 @@
 
 namespace esp\gd\gd;
 
-use esp\error\EspError;
 use esp\helper\library\gd\ext\Gd;
 
 /**
@@ -48,7 +47,7 @@ class Icon
             file_put_contents($icon_file, $im);
 
         } else {
-            if (!$icon_file) throw new EspError('文件流格式生成ICON时须指定要保存的文件名');
+            if (!$icon_file) throw new \Error('文件流格式生成ICON时须指定要保存的文件名');
             $file_image = Gd::createIM($img, false);
             $im = self::im_data($file_image);
             file_put_contents($icon_file, $im);
