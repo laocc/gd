@@ -7,7 +7,13 @@ class Image extends BaseGD
 {
     public function create(array $object)
     {
-        $base_im = \imagecreate($this->width, $this->height);
+        if (is_readable($this->file)) {
+            $bgFile = \getimagesize($this->file);
+            $base_im = $this->createIM($this->file, $bgFile[2]);
+//            throw new \Error("{$this->file} 不可读");
+        } else {
+            $base_im = \imagecreate($this->width, $this->height);
+        }
 
         foreach ($object as $obj) {
             $obj['save'] = 8;

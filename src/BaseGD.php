@@ -11,6 +11,7 @@ class BaseGD
     protected $tclip = false;
     protected $display = 0;
     protected $version = '';
+    protected $file = '';
     protected $cn_disc = null;
     protected $debug = false;
     protected $ratio = 1;//宽和高的比例
@@ -37,6 +38,7 @@ class BaseGD
         if (isset($conf['display'])) $this->display = intval($conf['display']);
         else if (isset($conf['save'])) $this->display = intval($conf['save']);
         if (isset($conf['disc'])) $this->cn_disc = ($conf['disc']);
+        if (isset($conf['file'])) $this->file = ($conf['file']);
         if (isset($conf['debug'])) $this->debug = boolval($conf['debug']);
         if (isset($conf['ratio'])) $this->ratio = floatval($conf['ratio']);
         if (isset($conf['header'])) $this->header = strval($conf['header']);
