@@ -2,6 +2,7 @@
 
 namespace esp\gd\gd;
 
+use esp\error\Error;
 use esp\helper\library\gd\ext\Gd;
 
 /**
@@ -23,7 +24,8 @@ class Code1
 {
     /**
      * @param $option
-     * @return mixed
+     * @return array|null[]
+     * @throws Error
      */
     public static function create($option)
     {
@@ -50,7 +52,7 @@ class Code1
         $option['path'] = '/' . trim($option['path'], '/') . '/';
 
         if (!preg_match('/^[\x20\w\!\@\#\$\%\^\&\*\(\)\_\+\`\-\=\[\]\{\}\;\'\\\:\"\|\,\.\/\<\>\?]+$/', $option['code'])) {
-            throw new \Error("条形码只能是英文、数字及半角符号组成");
+            throw new Error("条形码只能是英文、数字及半角符号组成");
         }
 
         if (!!$option['split']) {
@@ -196,7 +198,7 @@ final class BCG_Label
     public function setFont($font = null)
     {
         if ($font === null) {
-            throw new \Error('Font cannot be null.');
+            throw new Error('Font cannot be null.');
         }
 
         $this->font = clone $font;
@@ -224,7 +226,7 @@ final class BCG_Label
     {
         $position = intval($position);
         if ($position !== self::POSITION_TOP && $position !== self::POSITION_RIGHT && $position !== self::POSITION_BOTTOM && $position !== self::POSITION_LEFT) {
-            throw new \Error('The text position must be one of a valid constant.');
+            throw new Error('The text position must be one of a valid constant.');
         }
 
         $this->position = $position;
@@ -249,7 +251,7 @@ final class BCG_Label
     {
         $alignment = intval($alignment);
         if ($alignment !== self::ALIGN_LEFT && $alignment !== self::ALIGN_TOP && $alignment !== self::ALIGN_CENTER && $alignment !== self::ALIGN_RIGHT && $alignment !== self::ALIGN_BOTTOM) {
-            throw new \Error('The text alignment must be one of a valid constant.');
+            throw new Error('The text alignment must be one of a valid constant.');
         }
 
         $this->alignment = $alignment;
@@ -545,7 +547,7 @@ final class BCG_FontPhp implements BCG_Font
     {
         if ($this->rotationAngle !== 0) {
             if (!function_exists('imagerotate')) {
-                throw new \Error('The method imagerotate doesn\'t exist on your server. Do not use any rotation.');
+                throw new Error('The method imagerotate doesn\'t exist on your server. Do not use any rotation.');
             }
 
             $w = imagefontwidth($this->font) * strlen($this->text);
@@ -837,7 +839,7 @@ abstract class BCG_Barcode
     {
         $scale = intval($scale);
         if ($scale <= 0) {
-            throw new \Error('The scale must be larger than 0.');
+            throw new Error('The scale must be larger than 0.');
         }
 
         $this->scale = $scale;
@@ -942,7 +944,7 @@ abstract class BCG_Barcode
     {
         $offsetX = intval($offsetX);
         if ($offsetX < 0) {
-            throw new \Error('The offset X must be 0 or larger.');
+            throw new Error('The offset X must be 0 or larger.');
         }
 
         $this->offsetX = $offsetX;
@@ -967,7 +969,7 @@ abstract class BCG_Barcode
     {
         $offsetY = intval($offsetY);
         if ($offsetY < 0) {
-            throw new \Error('The offset Y must be 0 or larger.');
+            throw new Error('The offset Y must be 0 or larger.');
         }
 
         $this->offsetY = $offsetY;
@@ -1196,7 +1198,7 @@ abstract class BCG_Barcode1D extends BCG_Barcode
     {
         $this->thickness = intval($thickness);
         if ($this->thickness <= 0) {
-            throw new \Error('The thickness must be larger than 0.');
+            throw new Error('The thickness must be larger than 0.');
         }
     }
 
@@ -1592,7 +1594,7 @@ final class BCG_code128 extends BCG_Barcode1D
     public function setStart($table)
     {
         if ($table !== 'A' && $table !== 'B' && $table !== 'C' && $table !== NULL) {
-            throw new \Error('The starting table must be A, B, C or NULL.');
+            throw new Error('The starting table must be A, B, C or NULL.');
         }
 
         $this->starting_text = $table;
@@ -1705,7 +1707,7 @@ final class BCG_code128 extends BCG_Barcode1D
     {
         $c = count($this->data);
         if ($c === 0) {
-            throw new \Error('No data has been entered.');
+            throw new Error('No data has been entered.');
         }
 
         parent::validate();
@@ -1810,19 +1812,19 @@ final class BCG_code128 extends BCG_Barcode1D
                         if ($v >= 1 && $v <= 4) {
                             return '~F' . $v;
                         } else {
-                            throw new \Error('Bad ~F. You must provide a number from 1 to 4.');
+                            throw new Error('Bad ~F. You must provide a number from 1 to 4.');
                         }
                     } else {
-                        throw new \Error('Bad ~F. You must provide a number from 1 to 4.');
+                        throw new Error('Bad ~F. You must provide a number from 1 to 4.');
                     }
                 } else {
-                    throw new \Error('Wrong code after the ~.');
+                    throw new Error('Wrong code after the ~.');
                 }
             } else {
-                throw new \Error('Wrong code after the ~.');
+                throw new Error('Wrong code after the ~.');
             }
         } else {
-            throw new \Error('There is no ~ at this location.');
+            throw new Error('There is no ~ at this location.');
         }
     }
 
@@ -1844,19 +1846,19 @@ final class BCG_code128 extends BCG_Barcode1D
 
                 $simpleTilde = ($tildeData === '~~');
                 if ($simpleTilde && $currentMode !== 'B') {
-                    throw new \Error('The Table ' . $currentMode . ' doesn\'t contain the character ~.');
+                    throw new Error('The Table ' . $currentMode . ' doesn\'t contain the character ~.');
                 }
 
                 // At this point, we know we have ~Fx
                 if ($tildeData !== '~F1' && $currentMode === 'C') {
                     // The mode C doesn't support ~F2, ~F3, ~F4
-                    throw new \Error('The Table C doesn\'t contain the function ' . $tildeData . '.');
+                    throw new Error('The Table C doesn\'t contain the function ' . $tildeData . '.');
                 }
 
                 $length = $pos - $previousPos;
                 if ($currentMode === 'C') {
                     if ($length % 2 === 1) {
-                        throw new \Error('The text "' . $text . '" must have an even number of character to be encoded in Table C.');
+                        throw new Error('The text "' . $text . '" must have an even number of character to be encoded in Table C.');
                     }
                 }
 
@@ -1870,7 +1872,7 @@ final class BCG_code128 extends BCG_Barcode1D
             $length = strlen($text) - $previousPos;
             if ($currentMode === 'C') {
                 if ($length % 2 === 1) {
-                    throw new \Error('The text "' . $text . '" must have an even number of character to be encoded in Table C.');
+                    throw new Error('The text "' . $text . '" must have an even number of character to be encoded in Table C.');
                 }
             }
 
@@ -1901,7 +1903,7 @@ final class BCG_code128 extends BCG_Barcode1D
         $match = array();
         if (preg_match('/[^' . $tmp . ']/', $text, $match) === 1) {
             // We found something not allowed
-            throw new \Error('The text "' . $text . '" can\'t be parsed with the Table A. The character "' . $match[0] . '" is not allowed.');
+            throw new Error('The text "' . $text . '" can\'t be parsed with the Table A. The character "' . $match[0] . '" is not allowed.');
         } else {
             $latch = ($currentMode === 'A') ? '' : '0';
             $currentMode = 'A';
@@ -1924,7 +1926,7 @@ final class BCG_code128 extends BCG_Barcode1D
         $match = array();
         if (preg_match('/[^' . $tmp . ']/', $text, $match) === 1) {
             // We found something not allowed
-            throw new \Error('The text "' . $text . '" can\'t be parsed with the Table B. The character "' . $match[0] . '" is not allowed.');
+            throw new Error('The text "' . $text . '" can\'t be parsed with the Table B. The character "' . $match[0] . '" is not allowed.');
         } else {
             $latch = ($currentMode === 'B') ? '' : '1';
             $currentMode = 'B';
@@ -1952,7 +1954,7 @@ final class BCG_code128 extends BCG_Barcode1D
         $match = array();
         if (preg_match('/[^' . $tmp . ']/', $text, $match) === 1) {
             // We found something not allowed
-            throw new \Error('The text "' . $text . '" can\'t be parsed with the Table C. The character "' . $match[0] . '" is not allowed.');
+            throw new Error('The text "' . $text . '" can\'t be parsed with the Table C. The character "' . $match[0] . '" is not allowed.');
         } else {
             $latch = ($currentMode === 'C') ? '' : '2';
             $currentMode = 'C';
@@ -2075,7 +2077,7 @@ final class BCG_code128 extends BCG_Barcode1D
 
             if ($c === 0) {
                 // We found an unsuported character
-                throw new \Error('Character ' . $input . ' not supported.');
+                throw new Error('Character ' . $input . ' not supported.');
             }
 
             if ($flag) {

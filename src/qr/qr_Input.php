@@ -1,9 +1,8 @@
 <?php
 
-
 namespace esp\gd\qr;
 
-
+use esp\error\Error;
 
 class qr_Input
 {
@@ -17,7 +16,7 @@ class qr_Input
     public function __construct($version = 0, $level = 0)
     {
         if ($version < 0 || $version > 40 || $level > 3) {
-            throw new \Error('Invalid version no');
+            throw new Error('Invalid version no');
         }
 
         $this->version = $version;
@@ -34,7 +33,7 @@ class qr_Input
     public function setVersion($version)
     {
         if ($version < 0 || $version > 40) {
-            throw new \Error('Invalid version no');
+            throw new Error('Invalid version no');
         }
 
         $this->version = $version;
@@ -52,7 +51,7 @@ class qr_Input
     public function setErrorCorrectionLevel($level)
     {
         if ($level > 3) {
-            throw new \Error('Invalid ECLEVEL');
+            throw new Error('Invalid ECLEVEL');
         }
 
         $this->level = $level;
@@ -73,7 +72,7 @@ class qr_Input
             $entry = new qr_InputItem($mode, $size, $data);
             $this->items[] = $entry;
             return 0;
-        } catch (\Error $e) {
+        } catch (Error $e) {
             return -1;
         }
     }
@@ -317,7 +316,7 @@ class qr_Input
 
             $ver = qr_Spec::getMinimumVersion((int)(($bits + 7) / 8), $this->level);
             if ($ver < 0) {
-                throw new \Error('WRONG VERSION');
+                throw new Error('WRONG VERSION');
             } else if ($ver > $this->getVersion()) {
                 $this->setVersion($ver);
             } else {

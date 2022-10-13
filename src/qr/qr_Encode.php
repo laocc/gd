@@ -4,6 +4,8 @@
 namespace esp\gd\qr;
 
 
+use esp\error\Error;
+
 class qr_Encode
 {
     private $casesensitive = true;//区分大小写
@@ -34,10 +36,10 @@ class qr_Encode
     private static function encodeString($string, $version, $level, $hint, $casesensitive)
     {
         if (is_null($string) || $string == '\0' || $string == '') {
-            throw new \Error('empty string');
+            throw new Error('empty string');
         }
         if ($hint != 2 && $hint != 3) {
-            throw new \Error('bad hint');
+            throw new Error('bad hint');
         }
 
         $input = new qr_Input($version, $level);
@@ -58,10 +60,10 @@ class qr_Encode
     private static function encodeMask(qr_Input $input, $mask)
     {
         if ($input->getVersion() < 0 || $input->getVersion() > 40) {
-            throw new \Error('wrong version');
+            throw new Error('wrong version');
         }
         if ($input->getErrorCorrectionLevel() > 3) {
-            throw new \Error('wrong level');
+            throw new Error('wrong level');
         }
 
         $raw = new qr_RawCode($input);

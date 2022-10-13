@@ -10,7 +10,7 @@ class Image extends BaseGD
         if (is_readable($this->file)) {
             $bgFile = \getimagesize($this->file);
             $base_im = $this->createIM($this->file, $bgFile[2]);
-//            throw new \Error("{$this->file} 不可读");
+//            throw new Error("{$this->file} 不可读");
         } else {
             $base_im = \imagecreate($this->width, $this->height);
         }

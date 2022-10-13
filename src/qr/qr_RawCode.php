@@ -1,8 +1,8 @@
 <?php
 
-
 namespace esp\gd\qr;
 
+use esp\error\Error;
 
 class qr_RawCode
 {
@@ -23,7 +23,7 @@ class qr_RawCode
 
         $this->datacode = $input->getByteStream();
         if (is_null($this->datacode)) {
-            throw new \Error('null imput string');
+            throw new Error('null imput string');
         }
 
         qr_Spec::getEccSpec($input->getVersion(), $input->getErrorCorrectionLevel(), $spec);
@@ -37,7 +37,7 @@ class qr_RawCode
 
         $ret = $this->init($spec);
         if ($ret < 0) {
-            throw new \Error('block alloc error');
+            throw new Error('block alloc error');
         }
 
         $this->count = 0;
