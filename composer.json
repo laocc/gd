@@ -19,8 +19,7 @@
     "ext-curl": "*",
     "ext-openssl": "*",
     "ext-mbstring": "*",
-    "ext-zlib": "*",
-    "ext-redis": "*"
+    "ext-zlib": "*"
   },
   "autoload": {
     "psr-4": {
