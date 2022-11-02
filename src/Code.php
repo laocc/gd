@@ -86,7 +86,7 @@ final class Code extends BaseGD
     ];
 
     //中英文验证码字库，不要含有容易混淆的字符，如0和o。
-    private $disc = [
+    private array $disc = [
         'en' => 'AaBbCcDdEeFfGgHhJKkMmNnPpRqRSsTtUuVvWwXxYyZz23456789',//不含[01IijLlOor]容易混淆的字符
         'cn' => '我国首次火星探测任务经中央批准立项火星探测是我国深空探测继探月工程之后的重要创举是又项国家重大标志性工程为扩大工程的社会影响树立工程的文化形象激发全国人民和海外同胞的爱国热情探月与航工程中心会同有关部门和单位组织中国火星探测工程名称和图形标识全球征集活动',
         'num' => '0123456789'
@@ -124,21 +124,16 @@ final class Code extends BaseGD
             $enCode = password_hash($addContent, PASSWORD_DEFAULT);
             //输出之前先保存Cookies
             $_SESSION[strtolower($opt['key'] . $option['source'])] = $enCode;
-
-            if (version_compare(PHP_VERSION, '7.3', '>')) {
-                $cok = [];
-                $cok['domain'] = _DOMAIN;
-                $cok['expires'] = 0;
-                $cok['path'] = '/';
-                $cok['secure'] = _HTTPS;//仅https
-                $cok['httponly'] = true;
-                $cok['samesite'] = 'Lax';
-                setcookie(strtolower($opt['key'] . $option['source']), $enCode, $cok);
-            } else {
-                setcookie(strtolower($opt['key'] . $option['source']), $enCode, 0, '/', _DOMAIN, _HTTPS, true);
-            }
-
+            $cok = [];
+            $cok['domain'] = _DOMAIN;
+            $cok['expires'] = 0;
+            $cok['path'] = '/';
+            $cok['secure'] = _HTTPS;//仅https
+            $cok['httponly'] = true;
+            $cok['samesite'] = 'Lax';
+            setcookie(strtolower($opt['key'] . $option['source']), $enCode, $cok);
         }
+
         return $this->draw($img);
     }
 
@@ -162,18 +157,14 @@ final class Code extends BaseGD
         $addContent = strtoupper("{$ck['attach']}{$input}");
         $_SESSION[$key] = null;
 
-        if (version_compare(PHP_VERSION, '7.3', '>')) {
-            $cok = [];
-            $cok['domain'] = _DOMAIN;
-            $cok['expires'] = -1;
-            $cok['path'] = '/';
-            $cok['secure'] = _HTTPS;//仅https
-            $cok['httponly'] = true;
-            $cok['samesite'] = 'Lax';
-            setcookie($key, null, $cok);
-        } else {
-            setcookie($key, null, -1, '/', _DOMAIN, _HTTPS, true);
-        }
+        $cok = [];
+        $cok['domain'] = _DOMAIN;
+        $cok['expires'] = -1;
+        $cok['path'] = '/';
+        $cok['secure'] = _HTTPS;//仅https
+        $cok['httponly'] = true;
+        $cok['samesite'] = 'Lax';
+        setcookie($key, null, $cok);
         return password_verify($addContent, $session);
     }
 

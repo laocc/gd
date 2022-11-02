@@ -2,6 +2,7 @@
 
 namespace esp\gd;
 
+use esp\error\Error;
 
 class BaseGD
 {
@@ -29,6 +30,7 @@ class BaseGD
      *
      * BaseGD constructor.
      * @param array $conf
+     * @throws Error
      */
     public function __construct(array $conf = [])
     {
@@ -46,7 +48,7 @@ class BaseGD
         if (isset($conf['height'])) $this->height = intval($conf['height']);
 
         if (php_sapi_name() === 'cli' and $this->display & 1) {
-            throw new \Exception("cli模式中不能显示GD");
+            throw new Error("cli模式中不能显示GD");
         }
 
         $this->version = isset($_SERVER['SERVER_PROTOCOL']) ? $_SERVER['SERVER_PROTOCOL'] : '';

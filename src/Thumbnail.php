@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace esp\gd;
 
+use esp\error\Error;
 use function esp\helper\mk_dir;
 use function esp\helper\replace_array;
 
@@ -17,7 +18,7 @@ class Thumbnail extends BaseGD
      * @param string|null $rand
      * @param string $mode
      * @return string
-     * @throws \Exception
+     * @throws Error
      */
     public static function src(array $conf, string $img, $size = 2, string $rand = null, string $mode = 'x')
     {
@@ -34,7 +35,7 @@ class Thumbnail extends BaseGD
             $width = $size[0];
             $height = $size[1] ?? $width;
         } else {
-            throw new \Exception("size只能为int或array", 505);
+            throw new Error("size只能为int或array", 505);
         }
 
         $val = [];
@@ -190,7 +191,6 @@ class Thumbnail extends BaseGD
 
         //直接缩放
         if ($option['mode'] === 'z') {
-
 
         } elseif ($option['mode'] === 'x') {//以目标大小,最大化截取，裁切掉不等比部分
             switch ($PicV['cutShape']) {
