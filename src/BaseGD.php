@@ -6,20 +6,20 @@ use esp\error\Error;
 
 class BaseGD
 {
-    protected $quality = 50;
-    protected $markIcon = '';
-    protected $root = '';
-    protected $tclip = false;
-    protected $display = 0;
-    protected $version = '';
-    protected $file = '';
+    protected int $quality = 50;
+    protected string $markIcon = '';
+    protected string $root = '';
+    protected bool $tclip = false;
+    protected int $display = 0;
+    protected string $version = '';
+    protected string $file = '';
     protected $cn_disc = null;
-    protected $debug = false;
+    protected bool $debug = false;
     protected $ratio = 1;//宽和高的比例
-    protected $cache = true;//输出图像时缓存到浏览器
-    protected $header = 'EspGD Library';
-    protected $width = 0;
-    protected $height = 0;
+    protected bool $cache = true;//输出图像时缓存到浏览器
+    protected string $header = 'EspGD Library';
+    protected int $width = 0;
+    protected int $height = 0;
 
     /**
      * $display: 位和值
@@ -51,7 +51,7 @@ class BaseGD
             throw new Error("cli模式中不能显示GD");
         }
 
-        $this->version = isset($_SERVER['SERVER_PROTOCOL']) ? $_SERVER['SERVER_PROTOCOL'] : '';
+        $this->version = $_SERVER['SERVER_PROTOCOL'] ?? '';
         if (preg_match('/^\d\.\d$/', $this->version)) {
             $this->version = "HTTP/{$this->version}";
         }
@@ -85,18 +85,19 @@ class BaseGD
 
     /**
      * @param $im
-     * @param string $type
+     * @param string|null $type
      * @param string|null $fileName
-     * @return bool|string
+     * @return string
      */
-    public function draw($im, $type = null, string $fileName = null)
+    public function draw($im, string $type = null, string $fileName = null)
     {
         if (is_string($type)) {
             $type = ['gif' => IMAGETYPE_GIF,
                     'jpg' => IMAGETYPE_JPEG,
                     'jpeg' => IMAGETYPE_JPEG,
                     'png' => IMAGETYPE_PNG][$type] ?? IMAGETYPE_PNG;
-        }
+        } else if (is_null($type)) $type = IMAGETYPE_PNG;
+
         if ($this->display === 0) $this->display = 1;
 
         //保存到文件

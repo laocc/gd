@@ -226,8 +226,8 @@ final class Code extends BaseGD
             imagettftext($img,
                 is_int($opt['font_size']) ? $opt['font_size'] : mt_rand(...$opt['font_size']),//字体大小
                 is_int($opt['angle']) ? $opt['angle'] : mt_rand(...$opt['angle']),//倾斜角度
-                ($x < 5 ? $x + 5 : $x), //XY代表左下角
-                $opt['size'][1] * 0.7,      //Y，由于字体可能倾斜，所以不能是绝对底边
+                intval($x < 5 ? $x + 5 : $x), //XY代表左下角
+                intval($opt['size'][1] * 0.7),      //Y，由于字体可能倾斜，所以不能是绝对底边
                 $this->createColor($img, $opt['c_color']),//字体颜色
                 array_rand($cn ? $opt['cn_font'] : $opt['en_font']),  //字体
                 $code[$i]);
