@@ -120,7 +120,7 @@ class BaseGD
 
         //输出
         if ($this->display & 1) {
-            ob_end_clean();//清空所有缓存
+//            ob_end_clean();//清空所有缓存
             ob_start();//清除前先打开，否则在有些情况下清空缓存会失败
             header("{$this->version} 200", true, 200);
             header('Content-type:' . image_type_to_mime_type($type), true);
@@ -154,7 +154,7 @@ class BaseGD
         //返回base64
         $data = '';
         if ($this->display & 4) {
-            ob_end_clean();
+//            ob_end_clean();
             ob_start();
             imagepng($im);
             $data = ob_get_contents();
