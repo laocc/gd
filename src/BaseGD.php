@@ -63,7 +63,6 @@ class BaseGD
         }
     }
 
-
     const identifiers = [
         'gif' => IMAGETYPE_GIF,
         'jpg' => IMAGETYPE_JPEG,
