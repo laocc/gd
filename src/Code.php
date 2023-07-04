@@ -55,7 +55,7 @@ namespace esp\gd;
  */
 final class Code extends BaseGD
 {
-    private $option = [
+    private array $option = [
         'charset' => 'en',      //使用中文或英文验证码，cn=中文，en=英文，num=数字，若create()指定了，则以指定的为准
         'length' => [3, 5],     //验证码长度范围
         'size' => [150, 50],    //宽度，高度
