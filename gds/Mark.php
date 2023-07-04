@@ -59,7 +59,7 @@ class Mark
                     'shade' => [0, 0],
                     'shade_color' => '#555555',
                     'offset' => [0, 0],
-                    'font' => __DIR__ . '/../fonts/simkai.ttf',
+                    'font' => _FONT_ROOT . '/fonts/simkai.ttf',
                 ];
             if (!is_array($_txt_set['offset'])) $_txt_set['offset'] = json_decode($_txt_set['offset'], true);
             if (!is_array($_txt_set['shade'])) $_txt_set['shade'] = json_decode($_txt_set['shade'], true);

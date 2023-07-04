@@ -48,16 +48,14 @@ class Text extends BaseGD
             imagesavealpha($im, true);//设置保存PNG时保留透明通道信息
         }
 
-        $fntPath = dirname(__FILE__, 2);
-
         foreach ($text as $txt) {
             $txt += $bTxt;
             $color = $this->createColor($im, $txt['color']);
 
             $font = $txt['font'];
-            if (!$font) $font = "{$fntPath}/fonts/simkai.ttf";
-            else if ($font[0] !== '/') $font = "{$fntPath}/fonts/{$font}.ttf";
-            if (!is_readable($font)) $font = "{$fntPath}/fonts/simkai.ttf";
+            if (!$font) $font = _FONT_ROOT . "/fonts/simkai.ttf";
+            else if ($font[0] !== '/') $font = _FONT_ROOT . "/fonts/{$font}.ttf";
+            if (!is_readable($font)) $font = _FONT_ROOT . "/fonts/simkai.ttf";
 
             if ($txt['x'] === null) $txt['x'] = $txt['size'] * ($txt['percent'] - 1);
             if ($txt['y'] === null) $txt['y'] = $txt['size'];

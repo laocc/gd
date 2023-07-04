@@ -101,14 +101,13 @@ final class Code extends BaseGD
     {
         if (php_sapi_name() === 'cli') return null;
         $this->display = 1;
-        $dir = dirname(__DIR__);
         $option += $this->option;
         $enFont = ['en' => [], 'cn' => []];
         foreach ($option['en_font'] as $i => $f) {
-            $enFont['en'][] = $dir . $f;
+            $enFont['en'][] = _FONT_ROOT . $f;
         }
         foreach ($option['cn_font'] as $i => $f) {
-            $enFont['cn'][] = $dir . $f;
+            $enFont['cn'][] = _FONT_ROOT . $f;
         }
         $option['en_font'] = array_flip($enFont['en']);
         $option['cn_font'] = array_flip($enFont['cn']);
