@@ -10,8 +10,8 @@ use esp\gd\bar\BCG_FontPhp;
 
 /**
  * 条形码
- * Class Code1
- * @package tools
+ *
+ * Class BarCode
  *
  * $code = Array();
  * $code['value'] = $val;        //条码内容
