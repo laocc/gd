@@ -7,7 +7,7 @@ namespace esp\gd\qr;
 class qr_BitStream
 {
 
-    public $data = array();
+    public array $data = array();
 
 
     public function size()

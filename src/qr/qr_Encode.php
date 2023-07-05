@@ -8,9 +8,9 @@ use esp\error\Error;
 
 class qr_Encode
 {
-    private $casesensitive = true;//区分大小写
-    private $version = 0;
-    private $hint = 2;
+    private bool $casesensitive = true;//区分大小写
+    private int $version = 0;
+    private int $hint = 2;
 
     /**
      * @param $option
