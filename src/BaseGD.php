@@ -472,7 +472,7 @@ class BaseGD
      * @param string $ext
      * @return array
      */
-    public function getFileName(string $root, string $path, string $name = null, string $ext = 'png')
+    public function getFileName(string $root, string $path, string $name = null, string $ext = 'png'): array
     {
         $fileInfo = [];
         if ($this->display & 2) {

@@ -27,7 +27,7 @@ class BarCode extends BaseGD
 {
     /**
      * @param $option
-     * @return array|null[]
+     * @return array|string
      * @throws Error
      */
     public function create($option)
@@ -73,7 +73,7 @@ class BarCode extends BaseGD
         $color = new BCG_Color(0, 0, 0);
         $background = new BCG_Color(255, 255, 255);
 
-        $file = $this->getFileName($option['save'], $option['root'], $option['path'], $option['filename'], 'png');
+        $file = $this->getFileName($option['root'], $option['path'], $option['filename'], 'png');
 
         $Obj = new BCG_code128();
         $Obj->setLabel($option['label']);
@@ -93,7 +93,8 @@ class BarCode extends BaseGD
         $Obj->draw($im);
 
         $this->display = $option["save"];
-        $this->draw($im, IMAGETYPE_PNG, $file['filename']);
+        $code = $this->draw($im, IMAGETYPE_PNG, $file['filename'] ?? '');
+        if ($this->display & 4) return $code;
         return $file;
     }
 }
