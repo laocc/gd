@@ -32,7 +32,7 @@ class Code1
         if (!is_array($option)) {
             $option = ['value' => $option];
         }
-        $code = Array();
+        $code = array();
         $code['code'] = microtime(true);        //条码内容
         $code['font'] = null;       //字体，若不指定，则用PHP默认字体
         $code['size'] = 10;         //字体大小
@@ -558,7 +558,7 @@ final class BCG_FontPhp implements BCG_Font
             $gd = imagerotate($gd, $this->rotationAngle, 0);
             imagecopy($im, $gd, $x, $y, 0, 0, imagesx($gd), imagesy($gd));
         } else {
-            imagestring($im, $this->font, $x, $y, $this->text, $color);
+            imagestring($im, $this->font, intval($x), intval($y), $this->text, $color);
         }
     }
 }
