@@ -97,7 +97,7 @@ class Text extends BaseGD
 
         $file = null;
         if ($option['save'] & 2) {
-            $file = $this->getFileName($option['save'], $option['root'], $option['path'], 'png');
+            $file = $this->getFileName($option['root'], $option['path'], md5(uniqid(mt_rand(), true)), 'png');
             $gdOption['filename'] = $file['filename'];
         }
         if ($option['save'] & 8) return $im;
