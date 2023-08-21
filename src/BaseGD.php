@@ -482,7 +482,7 @@ class BaseGD
             $fileInfo = [
                 'root' => $root,
                 'path' => $path,
-                'file' => $name ?: (md5(uniqid(mt_rand(), true)) . '.' . ltrim($ext, '.')),
+                'file' => ($name ?: md5(uniqid(mt_rand(), true))) . '.' . ltrim($ext, '.'),
             ];
             $fileInfo['filename'] = "{$root}{$path}{$fileInfo['file']}";
         }
