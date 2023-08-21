@@ -9,6 +9,7 @@ class BaseGD
     protected int $quality = 50;
     protected string $markIcon = '';
     protected string $root = '';
+    protected string $path = '';
     protected bool $tclip = false;
     protected int $display = 0;
     protected string $version = '';
@@ -58,8 +59,8 @@ class BaseGD
 
         if (isset($conf['root'])) {
             $this->root = realpath($conf['root']);
-        } else {
-            $this->root = dirname(__DIR__);
+        } else if (defined('_ROOT')) {
+            $this->root = _ROOT;
         }
     }
 
@@ -472,18 +473,17 @@ class BaseGD
      * @param string $ext
      * @return array
      */
-    public function getFileName(string $root, string $path, string $name = null, string $ext = 'png'): array
+    public function getFileName(string $root, string $path, string $name, string $ext = 'png'): array
     {
         $fileInfo = [];
         if ($this->display & 2) {
-            if ($name and strlen($name) < 5) list($name, $ext) = [null, $name];
-            if (!is_dir($root)) @mkdir($root, 0740, true);
+            if (!is_dir("{$root}{$path}")) @mkdir("{$root}{$path}", 0740, true);
+
             $fileInfo = [
                 'root' => $root,
                 'path' => $path,
                 'file' => $name ?: (md5(uniqid(mt_rand(), true)) . '.' . ltrim($ext, '.')),
             ];
-            if (!is_dir("{$root}{$path}")) @mkdir("{$root}{$path}", 0740, true);
             $fileInfo['filename'] = "{$root}{$path}{$fileInfo['file']}";
         }
         return $fileInfo;

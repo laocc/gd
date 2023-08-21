@@ -10,7 +10,6 @@ class Image extends BaseGD
         if (is_readable($this->file)) {
             $bgFile = \getimagesize($this->file);
             $base_im = $this->createIM($this->file, $bgFile[2]);
-//            throw new Error("{$this->file} 不可读");
         } else {
             $base_im = \imagecreate($this->width, $this->height);
         }
@@ -74,23 +73,13 @@ class Image extends BaseGD
             }
         }
 
+        if ($this->display & 8) return $base_im;
 
-        $option = [
-            'save' => $this->display,
-            'filename' => '',
-            'type' => IMAGETYPE_PNG,//文件类型
-            'quality' => $this->quality,
-        ];
-
-        $file = null;
-        if ($option['save'] & 2) {
-            $file = $this->getFileName($option['root'], $option['path'], md5(uniqid(mt_rand(), true)), 'png');
-            $option['filename'] = $file['filename'];
-        }
-        if ($option['save'] & 8) return $base_im;
-
-        $gdImage = $this->draw($base_im, IMAGETYPE_PNG, $option['filename']);
-        if ($option['save'] & 4) return $gdImage;
+        $name = md5(uniqid(mt_rand(), true));
+        if (isset($conf['name'])) $name = $conf['name'];
+        $file = $this->getFileName($this->root, $this->path, $name, 'png');
+        $gdImage = $this->draw($base_im, IMAGETYPE_PNG, $file['filename'] ?? '');
+        if ($this->display & 4) return $gdImage;
 
         return $file;
     }

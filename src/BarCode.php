@@ -46,13 +46,13 @@ class BarCode extends BaseGD
         $code['root'] = getcwd();    //保存文件目录，不含在URL中部分
         $code['path'] = 'code1/';   //含在URL部分
         $code['save'] = 0;          //0：只显示，1：只保存，2：即显示也保存
-        $code['filename'] = null;      //不带此参，或此参为false值，则随机产生
+        $code['filename'] = '';      //不带此参，或此参为false值，则随机产生
 
         $option += $code;
+        if (isset($conf['root'])) $this->root = rtrim($conf['root'], '/');
+        if (isset($conf['path'])) $this->path = '/' . trim($conf['path'], '/');
 
         $option['code'] = strval($option['code']);
-        $option['root'] = rtrim($option['root'], '/');
-        $option['path'] = '/' . trim($option['path'], '/') . '/';
 
         if (!preg_match('/^[\x20\w\!\@\#\$\%\^\&\*\(\)\_\+\`\-\=\[\]\{\}\;\'\\\:\"\|\,\.\/\<\>\?]+$/', $option['code'])) {
             throw new Error("条形码只能是英文、数字及半角符号组成");
@@ -73,7 +73,7 @@ class BarCode extends BaseGD
         $color = new BCG_Color(0, 0, 0);
         $background = new BCG_Color(255, 255, 255);
 
-        $file = $this->getFileName($option['root'], $option['path'], $option['filename'], 'png');
+        $file = $this->getFileName($this->root, $this->path, $option['filename'], 'png');
 
         $Obj = new BCG_code128();
         $Obj->setLabel($option['label']);

@@ -22,8 +22,6 @@ class Text extends BaseGD
             'background' => '#ffffff',
             'alpha' => 0,//透明度
             'save' => 0,//0：只显示，1：只保存，2：即显示也保存
-            'root' => _RUNTIME . '/code/',
-            'path' => 'text/',
         ];
         $bTxt = [
             'size' => 20,
@@ -88,20 +86,14 @@ class Text extends BaseGD
             }
         }
 
-        $gdOption = [
-            'save' => $option['save'],
-            'filename' => '',
-            'type' => IMAGETYPE_PNG,//文件类型
-            'quality' => $option['quality'],
-        ];
+        $name = md5(uniqid(mt_rand(), true));
+        if (isset($conf['root'])) $this->root = rtrim($conf['root'], '/');
+        if (isset($conf['path'])) $this->path = '/' . trim($conf['path'], '/');
+        if (isset($conf['name'])) $name = $conf['name'];
 
-        $file = null;
-        if ($option['save'] & 2) {
-            $file = $this->getFileName($option['root'], $option['path'], md5(uniqid(mt_rand(), true)), 'png');
-            $gdOption['filename'] = $file['filename'];
-        }
+        $file = $this->getFileName($this->root, $this->path, $name, 'png');
         if ($option['save'] & 8) return $im;
-        $pic = $this->draw($im, IMAGETYPE_PNG, $gdOption['filename']);
+        $pic = $this->draw($im, IMAGETYPE_PNG, $file['filename']);
         if ($option['save'] & 4) return $pic;
 
         return $file;

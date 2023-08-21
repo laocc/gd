@@ -3,7 +3,6 @@
 namespace esp\gd;
 
 use esp\gd\qr\qr_Encode;
-use esp\helper\library\gd\ext\Gd;
 
 /**
  *
@@ -58,13 +57,12 @@ class QrCode extends BaseGD
         $option['level'] = 'Q';    //可选LMQH
         $option['size'] = 10;    //每条线像素点,一般不需要动，若要固定尺寸，用width限制
         $option['margin'] = 1;    //二维码外框空白，指1个size单位，不是指像素
-        $option['display'] = 0;    //0：只显示，1：只保存，2：即显示也保存，3：返回GD数据流，
         $option['width'] = 0;     //生成的二维码宽高，若不指定则以像素点计算
         $option['color'] = '#000000';   //二维码本色，也可以是图片
         $option['background'] = '#ffffff';  //二维码背景色
         $option['root'] = getcwd();  //保存目录
         $option['path'] = 'code2/';        //目录里的文件夹
-        $option['filename'] = null;        //生成的文件名
+        $option['filename'] = '';        //生成的文件名
 
         $option['logo'] = null;         //LOGO图片
         $option['logo_border'] = '#ffffff';  //LOGO外边框颜色
@@ -78,10 +76,12 @@ class QrCode extends BaseGD
         $option['shadow_y'] = 2;//阴影向下偏移，若为负数则向上
         $option['shadow_alpha'] = 0;//透明度，百分数
 
-
         $option = $dimOption + $option;
-        $option['root'] = rtrim($option['root'], '/');
-        $option['path'] = '/' . trim($option['path'], '/') . '/';
+        if (isset($conf['display'])) $this->display = intval($conf['display']);
+        else if (isset($conf['save'])) $this->display = intval($conf['save']);
+
+        if (isset($conf['root'])) $this->root = rtrim($conf['root'], '/');
+        if (isset($conf['path'])) $this->path = '/' . trim($conf['path'], '/');
 
         $option['width'] = is_int($option['width']) ? $option['width'] : 400;
         $option['size'] = is_int($option['size']) ? (($option['size'] < 1 or $option['size'] > 20) ? 10 : $option['size']) : 10;
@@ -93,11 +93,10 @@ class QrCode extends BaseGD
 
         if (is_int($option['level']) and $option['level'] > 3) $option['level'] = 3;
         $option['level'] = preg_match('/^[lQmh0123]$/i', $option['level']) ? strtoupper($option['level']) : 'Q';
-        $lmqh = ['L' => 0, 'M' => 1, 'Q' => 2, 'H' => 3];
-        if (in_array($option['level'], ['L', 'M', 'Q', 'H'])) $option['level'] = $lmqh[$option['level']];
+        $level = ['L' => 0, 'M' => 1, 'Q' => 2, 'H' => 3];
+        if (in_array($option['level'], ['L', 'M', 'Q', 'H'])) $option['level'] = $level[$option['level']];
 
-        //public function getFileName(string $root, string $path, string $name = null, string $ext = 'png')
-        $file = $this->getFileName($option['root'], $option['path'], $option['filename'], 'png');
+        $file = $this->getFileName($this->root, $this->path, $option['filename'], 'png');
 
         $ec = new qr_Encode();
         $im = $ec->create($option);
@@ -109,7 +108,6 @@ class QrCode extends BaseGD
         ];
         if ($option['save'] & 8) return $im;
 
-        $this->display = $option['save'];
         $gd = $this->draw($im, IMAGETYPE_PNG, $option['filename']);
         if ($option['save'] & 4) return $gd;
         if ($option['save'] & 1) exit;
