@@ -409,8 +409,8 @@ class BaseGD
             }
         } else {
             $color = preg_replace('/^[a-z]+$/i', $this->getColorHex('$1'), $color);//颜色名换色值
-            $color = preg_replace('/^\#([a-f0-9])([a-f0-9])([a-f0-9])$/i', '#$1$1$2$2$3$3', $color);//短色值换为标准色值
-            $color = preg_match('/^\#[a-f0-9]{6}$/i', $color) ? $color : '#000000';//不是标准色值的，都当成黑色
+            $color = preg_replace('/^\#([a-f\d])([a-f\d])([a-f\d])$/i', '#$1$1$2$2$3$3', $color);//短色值换为标准色值
+            $color = preg_match('/^\#[a-f\d]{6}$/i', $color) ? $color : '#000000';//不是标准色值的，都当成黑色
             $R = hexdec(substr($color, 1, 2));
             $G = hexdec(substr($color, 3, 2));
             $B = hexdec(substr($color, 5, 2));
