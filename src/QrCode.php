@@ -77,11 +77,11 @@ class QrCode extends BaseGD
         $option['shadow_alpha'] = 0;//透明度，百分数
 
         $option = $dimOption + $option;
-        if (isset($conf['display'])) $this->display = intval($conf['display']);
-        else if (isset($conf['save'])) $this->display = intval($conf['save']);
+        if (isset($option['display'])) $this->display = intval($option['display']);
+        else if (isset($option['save'])) $this->display = intval($option['save']);
 
-        if (isset($conf['root'])) $this->root = rtrim($conf['root'], '/');
-        if (isset($conf['path'])) $this->path = '/' . trim($conf['path'], '/');
+        if (isset($option['root'])) $this->root = rtrim($option['root'], '/');
+        if (isset($option['path'])) $this->path = '/' . trim($option['path'], '/');
 
         $option['width'] = is_int($option['width']) ? $option['width'] : 400;
         $option['size'] = is_int($option['size']) ? (($option['size'] < 1 or $option['size'] > 20) ? 10 : $option['size']) : 10;
