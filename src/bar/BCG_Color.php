@@ -1,8 +1,6 @@
 <?php
 namespace esp\gd\bar;
 
-use esp\helper\library\gd\ext\Gd;
-
 final class BCG_Color
 {
     protected $r, $g, $b;
@@ -16,7 +14,7 @@ final class BCG_Color
             $this->g = intval($args[1]);
             $this->b = intval($args[2]);
         } elseif ($c === 1) {
-            list($this->r, $this->g, $this->b) = Gd::getRGBColor($args[0]);
+            list($this->r, $this->g, $this->b) = $this->getRGBColor($args[0]);
 
         } else {
             $this->r = $this->g = $this->b = 0;
@@ -33,7 +31,7 @@ final class BCG_Color
      * @param $color
      * @return array
      */
-    public static function getRGBColor($color)
+    public function getRGBColor($color)
     {
         if (is_array($color)) {
             if (count($color) === 1) {
