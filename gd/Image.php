@@ -2,7 +2,7 @@
 
 namespace esp\gd\gd;
 
-use esp\helper\library\gd\ext\Gd;
+use esp\gd\gds\Gd;
 
 /**
  * 图片处理类：
@@ -46,7 +46,7 @@ class Image
      * @param bool $backUP
      * @return bool
      */
-    public static function ratio($file, float $ratio = 1.0, $byWidth = true, $save = 1, $backUP = false)
+    public static function ratio($file, float $ratio = 1.0, bool $byWidth = true, int $save = 1, bool $backUP = false)
     {
         if (!is_file($file)) return false;
         $info = getimagesize($file);
@@ -770,9 +770,11 @@ class Image
      * @param string $fileName
      * @param array $img
      * @param array $txt
+     * @param int $order
+     * @param array $opt
      * @return bool
      */
-    private static function Mark_Create($fileName, array $img, array $txt, $order = 1, array $opt = [])
+    public static function Mark_Create($fileName, array $img, array $txt, $order = 1, array $opt = [])
     {
         $wIMG = (!empty($img) and isset($img['file']) and !empty($img['file']) and is_file($img['file']));
         $wTEXT = (!empty($txt) and isset($txt['text']) and !empty($txt['text']) and is_file($txt['font']));

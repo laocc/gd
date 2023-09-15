@@ -1,7 +1,8 @@
 <?php
 
-namespace laocc\thumbnail\gd;
+namespace esp\gd\gds;
 
+use esp\gd\gd\Image;
 
 class Mark
 {
@@ -88,9 +89,9 @@ class Mark
             }
         }
 
-        if ($config['backup']) self::backup($picFile);
+        if ($config['backup']) Gd::backup($picFile);
 
-        return self::Mark_Create($picFile, $img, $txt, $config['order'], ['save' => 1]);
+        return Image::Mark_Create($picFile, $img, $txt, $config['order'], ['save' => 1]);
     }
 
 

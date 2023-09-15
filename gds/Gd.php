@@ -1,20 +1,20 @@
 <?php
 declare(strict_types=1);
 
-namespace laocc\thumbnail\gd;
+namespace esp\gd\gds;
 
 
 class Gd
 {
     const Quality = 80;    //JPG默认质量，对所有方法都有效
-    private $backup = [];
+    private static array $backup;
 
     /**
      * 同一文件只备份一次
      * @param $file
      * @param bool $force
      */
-    private static function backup($file, $force = false)
+    public static function backup($file, bool $force = false)
     {
         $mdKey = md5($file);
         if (!$force and isset(self::$backup[$mdKey])) return;
@@ -191,7 +191,7 @@ class Gd
         if ($alpha > 0) {//透明色
             if ($alpha > 100) $alpha = 100;
             $alpha = $alpha * 1.27;
-            return imagecolorallocatealpha($im, $R, $G, $B, $alpha);
+            return imagecolorallocatealpha($im, $R, $G, $B, (int)$alpha);
         } else {
             return imagecolorallocate($im, $R, $G, $B);
         }
@@ -360,14 +360,14 @@ class Gd
                     $COLOR = unpack("n", $VIDE . substr($IMG, $P, 1));
                     $COLOR[1] = $PALETTE[$COLOR[1] + 1];
                 } elseif ($BMP['bits_per_pixel'] === 4) {
-                    $COLOR = unpack("n", $VIDE . substr($IMG, floor($P), 1));
+                    $COLOR = unpack("n", $VIDE . substr($IMG, (int)floor($P), 1));
                     if (($P * 2) % 2 === 0)
                         $COLOR[1] = ($COLOR[1] >> 4);
                     else
                         $COLOR[1] = ($COLOR[1] & 0x0F);
                     $COLOR[1] = $PALETTE[$COLOR[1] + 1];
                 } elseif ($BMP['bits_per_pixel'] === 1) {
-                    $COLOR = unpack("n", $VIDE . substr($IMG, floor($P), 1));
+                    $COLOR = unpack("n", $VIDE . substr($IMG, (int)floor($P), 1));
                     if (($P * 8) % 8 === 0)
                         $COLOR[1] = $COLOR[1] >> 7;
                     elseif (($P * 8) % 8 === 1)
@@ -406,7 +406,7 @@ class Gd
             'filename' => null,
             'type' => IMAGETYPE_PNG,//文件类型
             'quality' => 80,
-            'version' => isset($_SERVER['SERVER_PROTOCOL']) ? $_SERVER['SERVER_PROTOCOL'] : '',
+            'version' => $_SERVER['SERVER_PROTOCOL'] ?? '',
         ];
         if (preg_match('/^\d\.\d$/', $option['version'])) {
             $option['version'] = "HTTP/{$option['version']}";
