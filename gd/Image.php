@@ -373,8 +373,7 @@ class Image
         if ($xy[2] < 300) $ico = $icon[1];
 
         $config = ['backup' => true, 'order' => 0, 'img' => ['file' => $ico], 'fix' => $xy];
-        $create = Image::mark($file, $config);
-        return $create;
+        return Image::mark($file, $config);
     }
 
     private static function dominant_color($image, $color)
@@ -397,8 +396,9 @@ class Image
                 default:
                     return [0, 0, 0, 0, $info[2], 'fail'];
             }
-        } catch (\Exception $exception) {
-            print_r($exception);
+
+        } catch (\Error|\Exception $error) {
+            print_r($error);
             return [0, 0, 0, 0, $info[2], 'error'];
         }
 
