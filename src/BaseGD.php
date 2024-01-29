@@ -484,7 +484,7 @@ class BaseGD
                 'path' => $path,
                 'file' => ($name ?: md5(uniqid(mt_rand(), true))) . '.' . ltrim($ext, '.'),
             ];
-            $fileInfo['filename'] = "{$root}{$path}{$fileInfo['file']}";
+            $fileInfo['filename'] = "{$root}{$path}/{$fileInfo['file']}";
         }
         return $fileInfo;
     }

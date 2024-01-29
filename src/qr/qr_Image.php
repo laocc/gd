@@ -8,11 +8,11 @@ class qr_Image extends BaseGD
 {
     /**
      * @param array $frame
-     * @param int $pixelPerPoint
-     * @param $option
+     * @param float $pixelPerPoint
+     * @param array $option
      * @return resource
      */
-    public function image(array $frame, $pixelPerPoint , $option)
+    public function image(array $frame,float $pixelPerPoint, array $option)
     {
         $h = count($frame);
         $w = strlen($frame[0]);
@@ -28,7 +28,7 @@ class qr_Image extends BaseGD
             $pixelPerPoint = $width / $imgW;
         }
 
-        if (preg_match('/^([a-z]+)|(\#[a-f0-9]{3})|(\#[a-f0-9]{6})$/i', $option['background'])) {
+        if (preg_match('/^([a-z]+)|(\#[a-f\d]{3})|(\#[a-f\d]{6})$/i', $option['background'])) {
             $resource_im = \imagecreate($imgW, $imgH);
             $bgColor = $this->createColor($resource_im, $option['background']);//二维码的背景色
             \imagefill($resource_im, 0, 0, $bgColor);//填充背景色
@@ -56,7 +56,7 @@ class qr_Image extends BaseGD
 
 
         //用图片做前景色
-        if (is_file($option['color'])) {
+        if (($option['color'][0] === '/') and is_file($option['color'])) {
             //先把图片复制到空白容器里去
             $IM = \imagecreatetruecolor($width, $height);//用真彩色
             $info = \getimagesize($option['color']);
