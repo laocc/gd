@@ -7,6 +7,8 @@ use esp\error\Error;
 use function esp\helper\mk_dir;
 use function esp\helper\replace_array;
 
+if (!defined('_CLI')) define('_CLI', false);
+
 class Thumbnail extends BaseGD
 {
 
@@ -14,13 +16,13 @@ class Thumbnail extends BaseGD
      * 生成缩略图URL
      * @param array $conf
      * @param string $img
-     * @param int $size
+     * @param $size
      * @param string|null $rand
      * @param string $mode
      * @return string
      * @throws Error
      */
-    public static function src(array $conf, string $img, $size = 2, string $rand = null, string $mode = 'x')
+    public static function src(array $conf, string $img, $size = 2, string $rand = null, string $mode = 'x'): string
     {
         if (!$img) return '';
         if ($size === 0) return $img;
@@ -63,7 +65,7 @@ class Thumbnail extends BaseGD
     {
         $r = strpos($uri, '?');
         if ($r > 0) $uri = substr($uri, 0, $r);
-        $this->display = $conf['display'] ?? 3;
+        $this->display = ($conf['display'] ?? 3);//1保存+2显示
 
         $mch = preg_match($conf['pattern'], $uri, $matches);
         if ($mch) {
@@ -240,18 +242,16 @@ class Thumbnail extends BaseGD
             intval($oldWidth), intval($oldHeight)//源图宽高
         );
 
-        $option = [
-            'filename' => $file,
-            'type' => $PicV['info'][2],//文件类型
-            'cache' => $option['cache'],//允许缓存
-            'quality' => $this->quality,
-        ];
-
         if ($this->debug) {
-            return print_r($option, true);
+            return print_r([
+                'filename' => $file,
+                'type' => $PicV['info'][2],//文件类型
+                'cache' => $option['cache'],//允许缓存
+                'quality' => $this->quality,
+            ], true);
         }
 
-        $this->draw($newIM, IMAGETYPE_PNG, $file);
+        $this->draw($newIM, trim($option['ext'], '.'), $file);
         imagedestroy($oldIM);
         return '';
     }
