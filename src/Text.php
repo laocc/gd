@@ -93,7 +93,7 @@ class Text extends BaseGD
 
         $file = $this->getFileName($this->root, $this->path, $name, 'png');
         if ($option['save'] & 8) return $im;
-        $pic = $this->draw($im, IMAGETYPE_PNG, $file['filename']);
+        $pic = $this->draw($im, IMAGETYPE_PNG, $file['filename'] ?? null);
         if ($option['save'] & 4) return $pic;
 
         return $file;

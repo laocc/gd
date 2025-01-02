@@ -93,7 +93,7 @@ class BarCode extends BaseGD
         $Obj->draw($im);
 
         $this->display = $option["save"];
-        $code = $this->draw($im, IMAGETYPE_PNG, $file['filename'] ?? '');
+        $code = $this->draw($im, IMAGETYPE_PNG, $file['filename'] ?? null);
         if ($this->display & 4) return $code;
         return $file;
     }

@@ -78,7 +78,7 @@ class Image extends BaseGD
         $name = md5(uniqid(mt_rand(), true));
         if (isset($conf['name'])) $name = $conf['name'];
         $file = $this->getFileName($this->root, $this->path, $name, 'png');
-        $gdImage = $this->draw($base_im, IMAGETYPE_PNG, $file['filename'] ?? '');
+        $gdImage = $this->draw($base_im, IMAGETYPE_PNG, $file['filename'] ?? null);
         if ($this->display & 4) return $gdImage;
 
         return $file;
