@@ -81,7 +81,8 @@ final class Code extends BaseGD
             'date' => 'YmdH',   //附加时间标识用于date()函数，同时也是有效期
         ],
         'type' => 1,//式样1
-        'session' => true
+
+        'session' => true,//保存到session+cookies
     ];
 
     //中英文验证码字库，不要含有容易混淆的字符，如0和o。
@@ -95,7 +96,7 @@ final class Code extends BaseGD
     /**
      * 生成验证码
      * @param array $option
-     * @return bool|null
+     * @return string|null
      */
     public function create(array $option = [])
     {
@@ -120,65 +121,38 @@ final class Code extends BaseGD
             $opt['attach'] .= date($opt['date']);
             $addContent = strtoupper($opt['attach'] . implode($code));//附加串，有效期最长1小时
             $enCode = password_hash($addContent, PASSWORD_DEFAULT);
-            //输出之前先保存Cookies
-            $_SESSION[strtolower($opt['key'] . $option['source'])] = $enCode;
-            $cok = [];
-            $cok['domain'] = _DOMAIN;
-            $cok['expires'] = 0;
-            $cok['path'] = '/';
-            $cok['secure'] = _HTTPS;//仅https
-            $cok['httponly'] = true;
-            $cok['samesite'] = 'Lax';
-            setcookie(strtolower($opt['key'] . $option['source']), $enCode, $cok);
+            $saveKey = strtolower($opt['key'] . $option['source']);
+
+            if ($option['session']) {
+                //输出之前先保存Cookies
+                $_SESSION[$saveKey] = $enCode;
+                $cok = [];
+                $cok['domain'] = _DOMAIN;
+                $cok['expires'] = 0;
+                $cok['path'] = '/';
+                $cok['secure'] = _HTTPS;//仅https
+                $cok['httponly'] = true;
+                $cok['samesite'] = 'Lax';
+                setcookie($saveKey, $enCode, $cok);
+            } else {
+                file_put_contents("/tmp/qr_code_{$saveKey}", $enCode);
+            }
         }
 
         return $this->draw($img);
     }
 
     /**
-     * 验证 create 产生的验证码
-     * @param array $option
-     * @param string $input
-     * @return bool
-     */
-    public function check(array $option, string $input)
-    {
-        if (!$input) return false;
-        $option += $this->option;
-        $ck = $option['cookies'];
-        $ck['attach'] .= date($ck['date']);
-        $key = strtolower("{$ck['key']}{$option['source']}");
-        if (!$cookies = ($_COOKIE[$key] ?? null)) return false;
-        if (!$session = ($_SESSION[$key] ?? null)) return false;
-        if ($session !== $cookies) return null;
-
-        $addContent = strtoupper("{$ck['attach']}{$input}");
-        $_SESSION[$key] = null;
-
-        $cok = [];
-        $cok['domain'] = _DOMAIN;
-        $cok['expires'] = -1;
-        $cok['path'] = '/';
-        $cok['secure'] = _HTTPS;//仅https
-        $cok['httponly'] = true;
-        $cok['samesite'] = 'Lax';
-        setcookie($key, '', $cok);
-        return password_verify($addContent, $session);
-    }
-
-
-    /**
      * @param $img
      * @param $code
      * @param array $opt
      */
-    private function createCode1(&$img, &$code, array $opt)
+    private function createCode1(&$img, &$code, array $opt): void
     {
-        $opt['font_size'] = [($opt['size'][1] / 2) - 1, ($opt['size'][1] / 2) + 1];
+        $opt['code_size'] = [($opt['size'][1] / 2) - 1, ($opt['size'][1] / 2) + 1];
 
         $cn = $opt['charset'] === 'cn';
         if ($cn && $this->cn_disc) $this->disc['cn'] = $this->cn_disc;
-
 
         //生成画板并填色
         $img = imagecreatetruecolor(...$opt['size']);//容器
@@ -209,7 +183,7 @@ final class Code extends BaseGD
         //生成雪花
         for ($i = 0; $i < (is_int($opt['point']) ? $opt['point'] : mt_rand(...$opt['point'])); $i++) {
             imagettftext($img,
-                mt_rand(...$opt['font_size']), 0,
+                mt_rand(...$opt['code_size']), 0,
                 mt_rand(0, $opt['size'][0]),
                 mt_rand(0, $opt['size'][1]),
                 $this->createColor($img, $opt['p_color']),
@@ -222,7 +196,7 @@ final class Code extends BaseGD
             $p = abs($_code_len - $_code_len / 2) / $_code_len;
             $x = $_x * ($i + $p) + mt_rand(...$opt['span']);
             imagettftext($img,
-                is_int($opt['font_size']) ? $opt['font_size'] : mt_rand(...$opt['font_size']),//字体大小
+                $opt['font_size'] ?? mt_rand(...$opt['code_size']),//字体大小
                 is_int($opt['angle']) ? $opt['angle'] : mt_rand(...$opt['angle']),//倾斜角度
                 intval($x < 5 ? $x + 5 : $x), //XY代表左下角
                 intval($opt['size'][1] * 0.7),      //Y，由于字体可能倾斜，所以不能是绝对底边
@@ -230,6 +204,43 @@ final class Code extends BaseGD
                 array_rand($cn ? $opt['cn_font'] : $opt['en_font']),  //字体
                 $code[$i]);
         }
+    }
+
+    /**
+     * 验证 create 产生的验证码
+     */
+    public function check(array $option, string $input)
+    {
+        if (!$input) return "输入为空";
+
+        $option += $this->option;
+        $ck = $option['cookies'];
+        $ck['attach'] .= date($ck['date']);
+        $key = strtolower("{$ck['key']}{$option['source']}");
+        $addContent = strtoupper("{$ck['attach']}{$input}");
+
+        if ($option['session']) {
+            if (!$cookies = ($_COOKIE[$key] ?? null)) return 'cookies为空';
+            if (!$session = ($_SESSION[$key] ?? null)) return 'session为空';
+            if ($session !== $cookies) return 'session与cookies不一致';
+
+            $_SESSION[$key] = null;
+            $cok = [];
+            $cok['domain'] = _DOMAIN;
+            $cok['expires'] = -1;
+            $cok['path'] = '/';
+            $cok['secure'] = _HTTPS;//仅https
+            $cok['httponly'] = true;
+            $cok['samesite'] = 'Lax';
+            setcookie($key, '', $cok);
+
+        } else {
+            if (!file_exists("/tmp/qr_code_{$key}")) return '媒体文件不存在';
+
+            $session = file_get_contents("/tmp/qr_code_{$key}");
+        }
+
+        return password_verify($addContent, $session);
     }
 
 }
