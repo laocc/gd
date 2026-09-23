@@ -19,10 +19,10 @@ use esp\gd\gds\Gd;
  */
 class Image
 {
-    const Quality = 80;    //JPG默认质量，对所有方法都有效
+    const int Quality = 80;    //JPG默认质量，对所有方法都有效
 
-    static private $backup = Array();
-    static private $pattern;
+    static private array $backup = array();
+    static private string $pattern;
 
     /**
      * 图片尺寸超大或超小时，缩放至该尺寸
@@ -202,20 +202,6 @@ class Image
     }
 
     /**
-     * 设置缩图的正则公式
-     * @param $ptn
-     */
-    public function pattern($ptn)
-    {
-        if (!!$ptn) self::$pattern = $ptn;
-    }
-
-    private static function thumbs_ptn()
-    {
-        return self::$pattern ?: '/^\/(.+?)\.(jpg|gif|png|bmp|jpeg)\_(\d{1,4})(x|v|z)(\d{1,4})\.\2(?:[\?\#].*)?$/i';
-    }
-
-    /**
      * 生成缩略图格式的URL
      * @param array $option
      * @return mixed|null|string
@@ -256,17 +242,6 @@ class Image
     }
 
     /**
-     * 访问图片缩略图时，若不存在，则直接创建
-     * 仅处理符合这种结构的文件，且原图与缩图后缀必须相同，否则返回不存在
-     * @param string $path 缩图保存位置，若不给定，则取$_SERVER['DOCUMENT_ROOT']
-     * @param string $Uri 访问进来的图片地址，不含域名
-     * 如：图片地址：https://www.codefarmer.wang/goods/1449647697_867207_9125.jpg_150x200.jpg
-     * 不含域名部分：/goods/1449647697_867207_9125.jpg_150x200.jpg
-     * 1，其中的两个后缀必须相同；
-     * 2，最后两个数字是缩略图的尺寸；
-     * 3，数字中间为x|v|z，x=以最小边多余部分裁掉，v=最大边不够补白,z=拉伸
-     */
-    /**
      * @param null $path
      * @param null $option
      * @return bool|string
@@ -274,7 +249,7 @@ class Image
     public static function thumbs($path = null, $option = null)
     {
         if (is_array($path)) list($path, $option) = [$option, $path];
-        if (!is_array($option)) $option = Array();
+        if (!is_array($option)) $option = array();
 
         $option += [
             'save' => 2,//0：只显示，1：只保存，2：即显示也保存
@@ -353,7 +328,6 @@ class Image
         }
     }
 
-
     public static function addMark($file)
     {
         $color = ['r' => [0, 19], 'g' => [120, 135], 'b' => [240, 255]];
@@ -376,106 +350,18 @@ class Image
         return Image::mark($file, $config);
     }
 
-    private static function dominant_color($image, $color)
-    {
-        $info = getimagesize($image);
-        try {
-            switch ($info[2]) {
-                case 2:
-                    $i = @imagecreatefromjpeg($image);
-                    break;
-                case 3:
-                    $i = @imagecreatefrompng($image);
-                    break;
-                case 1:
-                    $i = @imagecreatefromgif($image);
-                    break;
-                case 6:
-                    $i = @imagecreatefrombmp($image);
-                    break;
-                default:
-                    return [0, 0, 0, 0, $info[2], 'fail'];
-            }
-
-        } catch (\Error|\Exception $error) {
-            print_r($error);
-            return [0, 0, 0, 0, $info[2], 'error'];
-        }
-
-        $xx = $yy = [];
-        $w = imagesx($i);
-        $h = imagesy($i);
-
-        for ($x = 0; $x < $w; $x++) {
-            if ($x > 260) continue;
-            for ($y = 0; $y < $h; $y++) {
-                if ($y > 260) continue;
-                $index = imagecolorat($i, $x, $y);
-                $rgb = imagecolorsforindex($i, $index);
-                $r = $rgb['red'];
-                $g = $rgb['green'];
-                $b = $rgb['blue'];
-
-                if ($r > $color['r'][0] and $r < $color['r'][1]
-                    and $g > $color['g'][0] and $g < $color['g'][1]
-                    and $b > $color['b'][0] and $b < $color['b'][1]
-                ) {
-                    $xx[] = $x;
-                    $yy[] = $y;
-                }
-
-            }
-        }
-        $x = $y = 0;
-
-        if (!empty($xx)) $x = intval(array_sum($xx) / count($xx));
-        if (!empty($yy)) $y = intval(array_sum($yy) / count($yy));
-
-        return [$x, $y, $w, $h, $info[2], 'null'];
-    }
-
-
     /**
-     * 用tclip插件生成缩略图
-     * 关于tclip：https://github.com/exinnet/tclip
-     * @param string $file
-     * @param array $option
-     * @return bool
+     * 访问图片缩略图时，若不存在，则直接创建
+     * 仅处理符合这种结构的文件，且原图与缩图后缀必须相同，否则返回不存在
+     * @param string $path 缩图保存位置，若不给定，则取$_SERVER['DOCUMENT_ROOT']
+     * @param string $Uri 访问进来的图片地址，不含域名
+     * 如：图片地址：https://www.codefarmer.wang/goods/1449647697_867207_9125.jpg_150x200.jpg
+     * 不含域名部分：/goods/1449647697_867207_9125.jpg_150x200.jpg
+     * 1，其中的两个后缀必须相同；
+     * 2，最后两个数字是缩略图的尺寸；
+     * 3，数字中间为x|v|z，x=以最小边多余部分裁掉，v=最大边不够补白,z=拉伸
      */
-    private static function thumbs_tclip(string $file, array $option = [])
-    {
-        $option += ['save' => 1, 'cache' => true];
 
-        if (!function_exists('tclip')) return self::thumbs_create($file, $option);
-
-        if (!isset($option['source']) or !is_file($option['source'])) return '源文件不存在';//源文件不存在
-        $watermark_text = '';
-        $create = \tclip($option['source'], $file, $option['width'], $option['height']);
-
-        if ($create === true) {
-            $type = \exif_imagetype($file);
-            $im = Gd::createIM($file, $type);
-            $option = [
-                'save' => 0,//0：只显示，1：只保存，2：即显示也保存
-                'cache' => $option['cache'],//允许缓存
-                'type' => $type,//文件类型
-                'quality' => self::Quality,
-            ];
-            Gd::draw($im, $option);
-            return true;
-        } else {
-            return self::thumbs_create($file, $option);
-        }
-    }
-
-    /**
-     * 根据$file路径信息，生成缩略图
-     * @param string $file 如：/home/web/blog/pic/filename.jpg_100x100.jpg
-     * @param array $option
-     * 0:z=直接按尺寸
-     * 1:v=以最大边不够补白
-     * 2:x=以最小边多的裁掉
-     */
     /**
      * @param string $file
      * @param array $option
@@ -607,18 +493,6 @@ class Image
         return true;
     }
 
-
-    /**
-     * 访问图片缩略图时，若不存在，则直接创建
-     * 仅处理符合这种结构的文件，且原图与缩图后缀必须相同，否则返回不存在
-     * @param string $path 缩图保存位置，若不给定，则取$_SERVER['DOCUMENT_ROOT']
-     * @param string $Uri 访问进来的图片地址，不含域名
-     * 如：图片地址：https://www.codefarmer.wang/goods/1449647697_867207_9125.jpg_150x200.jpg
-     * 不含域名部分：/goods/1449647697_867207_9125.jpg_150x200.jpg
-     * 1，其中的两个后缀必须相同；
-     * 2，最后两个数字是缩略图的尺寸；
-     * 3，数字中间为x|v|z，x=以最小边多余部分裁掉，v=最大边不够补白,z=拉伸
-     */
     /**
      * @param null $path
      * @param null $option
@@ -627,7 +501,7 @@ class Image
     public static function thumbs_old($path = null, $option = null)
     {
         if (is_array($path)) list($path, $option) = [$option, $path];
-        if (!is_array($option)) $option = Array();
+        if (!is_array($option)) $option = array();
 
         $option += [
             'save' => 2,//0：只显示，1：只保存，2：即显示也保存
@@ -762,7 +636,6 @@ class Image
 
         return self::Mark_Create($picFile, $img, $txt, $config['order'], ['save' => 1]);
     }
-
 
     /**
      * 加水印
@@ -1078,6 +951,123 @@ class Image
         return true;
     }
 
+    /**
+     * 根据$file路径信息，生成缩略图
+     * @param string $file 如：/home/web/blog/pic/filename.jpg_100x100.jpg
+     * @param array $option
+     * 0:z=直接按尺寸
+     * 1:v=以最大边不够补白
+     * 2:x=以最小边多的裁掉
+     */
+
+    private static function thumbs_ptn()
+    {
+        return self::$pattern ?: '/^\/(.+?)\.(jpg|gif|png|bmp|jpeg)\_(\d{1,4})(x|v|z)(\d{1,4})\.\2(?:[\?\#].*)?$/i';
+    }
+
+
+    /**
+     * 访问图片缩略图时，若不存在，则直接创建
+     * 仅处理符合这种结构的文件，且原图与缩图后缀必须相同，否则返回不存在
+     * @param string $path 缩图保存位置，若不给定，则取$_SERVER['DOCUMENT_ROOT']
+     * @param string $Uri 访问进来的图片地址，不含域名
+     * 如：图片地址：https://www.codefarmer.wang/goods/1449647697_867207_9125.jpg_150x200.jpg
+     * 不含域名部分：/goods/1449647697_867207_9125.jpg_150x200.jpg
+     * 1，其中的两个后缀必须相同；
+     * 2，最后两个数字是缩略图的尺寸；
+     * 3，数字中间为x|v|z，x=以最小边多余部分裁掉，v=最大边不够补白,z=拉伸
+     */
+
+    private static function dominant_color($image, $color)
+    {
+        $info = getimagesize($image);
+        try {
+            switch ($info[2]) {
+                case 2:
+                    $i = @imagecreatefromjpeg($image);
+                    break;
+                case 3:
+                    $i = @imagecreatefrompng($image);
+                    break;
+                case 1:
+                    $i = @imagecreatefromgif($image);
+                    break;
+                case 6:
+                    $i = @imagecreatefrombmp($image);
+                    break;
+                default:
+                    return [0, 0, 0, 0, $info[2], 'fail'];
+            }
+
+        } catch (\Error|\Exception $error) {
+            print_r($error);
+            return [0, 0, 0, 0, $info[2], 'error'];
+        }
+
+        $xx = $yy = [];
+        $w = imagesx($i);
+        $h = imagesy($i);
+
+        for ($x = 0; $x < $w; $x++) {
+            if ($x > 260) continue;
+            for ($y = 0; $y < $h; $y++) {
+                if ($y > 260) continue;
+                $index = imagecolorat($i, $x, $y);
+                $rgb = imagecolorsforindex($i, $index);
+                $r = $rgb['red'];
+                $g = $rgb['green'];
+                $b = $rgb['blue'];
+
+                if ($r > $color['r'][0] and $r < $color['r'][1]
+                    and $g > $color['g'][0] and $g < $color['g'][1]
+                    and $b > $color['b'][0] and $b < $color['b'][1]
+                ) {
+                    $xx[] = $x;
+                    $yy[] = $y;
+                }
+
+            }
+        }
+        $x = $y = 0;
+
+        if (!empty($xx)) $x = intval(array_sum($xx) / count($xx));
+        if (!empty($yy)) $y = intval(array_sum($yy) / count($yy));
+
+        return [$x, $y, $w, $h, $info[2], 'null'];
+    }
+
+    /**
+     * 用tclip插件生成缩略图
+     * 关于tclip：https://github.com/exinnet/tclip
+     * @param string $file
+     * @param array $option
+     * @return bool
+     */
+    private static function thumbs_tclip(string $file, array $option = [])
+    {
+        $option += ['save' => 1, 'cache' => true];
+
+        if (!function_exists('tclip')) return self::thumbs_create($file, $option);
+
+        if (!isset($option['source']) or !is_file($option['source'])) return '源文件不存在';//源文件不存在
+        $watermark_text = '';
+        $create = \tclip($option['source'], $file, $option['width'], $option['height']);
+
+        if ($create === true) {
+            $type = \exif_imagetype($file);
+            $im = Gd::createIM($file, $type);
+            $option = [
+                'save' => 0,//0：只显示，1：只保存，2：即显示也保存
+                'cache' => $option['cache'],//允许缓存
+                'type' => $type,//文件类型
+                'quality' => self::Quality,
+            ];
+            Gd::draw($im, $option);
+            return true;
+        } else {
+            return self::thumbs_create($file, $option);
+        }
+    }
 
     /**
      * 修正为_ROOT开头
@@ -1092,7 +1082,6 @@ class Image
         return $path;
     }
 
-
     /**
      * 同一文件只备份一次
      * @param $file
@@ -1106,6 +1095,15 @@ class Image
         if (is_file("{$file}.{$ext}")) return;
         copy($file, "{$file}.{$ext}");
         self::$backup[$mdKey] = 1;
+    }
+
+    /**
+     * 设置缩图的正则公式
+     * @param $ptn
+     */
+    public function pattern($ptn)
+    {
+        if (!!$ptn) self::$pattern = $ptn;
     }
 
 }

@@ -26,14 +26,14 @@ class Icon
     /**
      * @param string $img 资源，可以是一个图片文件，或是文件流
      * @param int $size 要生成的尺寸
-     * @param null $icon_file
+     * @param string|null $icon_file
      * @return bool|null|string
-     * @throws \Exception
+     * @throws Error
      */
-    public static function create($img, $size = 32, $icon_file = null)
+    public static function create(string $img, int $size = 32, string $icon_file = null)
     {
         if (!in_array($size, [16, 32, 48, 64, 128])) $size = 32;
-        $is_file = stripos('$img', 'data:image') !== 0;
+        $is_file = stripos($img, 'data:image') !== 0;
 
         if ($is_file) {
             $info = getimagesize($img);
@@ -45,20 +45,20 @@ class Icon
             $gd_image = imagecreatetruecolor($size, $size);
             imagecopyresampled($gd_image, $file_image, 0, 0, 0, 0, $size, $size, $info[0], $info[1]);
             $im = self::im_data($gd_image, $size);
-            file_put_contents($icon_file, $im);
 
         } else {
             if (!$icon_file) throw new Error('文件流格式生成ICON时须指定要保存的文件名');
             $file_image = Gd::createIM($img, false);
             $im = self::im_data($file_image);
-            file_put_contents($icon_file, $im);
         }
+
+        file_put_contents($icon_file, $im);
         return $icon_file;
     }
 
     private static function im_data($gd_image, $size = 0)
     {
-        $icAndMask = Array();
+        $icAndMask = array();
         $icXOR = $icAND = '';
 
         $le2s = function ($number, $byte = 1) {
