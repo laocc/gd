@@ -22,7 +22,7 @@ class Thumbnail extends BaseGD
      * @return string
      * @throws Error
      */
-    public static function src(array $conf, string $img, $size = 2, string $rand = null, string $mode = 'x'): string
+    public static function src(array $conf, string $img, $size = 2, ?string $rand = null, string $mode = 'x'): string
     {
         if (!$img) return '';
         if ($size === 0) return $img;

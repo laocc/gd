@@ -89,7 +89,7 @@ class BaseGD
      * @param string|null $fileName
      * @return string
      */
-    public function draw($im, string $type = null, string $fileName = null)
+    public function draw($im, ?string $type = null, ?string $fileName = null)
     {
         if (is_string($type)) {
             $type = ['gif' => IMAGETYPE_GIF,

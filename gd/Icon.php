@@ -30,7 +30,7 @@ class Icon
      * @return bool|null|string
      * @throws Error
      */
-    public static function create(string $img, int $size = 32, string $icon_file = null)
+    public static function create(string $img, int $size = 32, ?string $icon_file = null)
     {
         if (!in_array($size, [16, 32, 48, 64, 128])) $size = 32;
         $is_file = stripos($img, 'data:image') !== 0;
